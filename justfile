@@ -2,6 +2,9 @@ set dotenv-load
 just := just_executable()
 make := `which make`
 
+rootdir := ''
+prefix := '/usr/local'
+
 build:
     mkdir -p build
     {{ just }} cosmic-applets/build-release
@@ -25,7 +28,8 @@ build:
     {{ make }} -C cosmic-workspaces-epoch all
     {{ make }} -C xdg-desktop-portal-cosmic all
 
-install rootdir="" prefix="/usr/local": build
+install:
+    build
     {{ just }} rootdir={{rootdir}} prefix={{prefix}} cosmic-applets/install
     {{ just }} rootdir={{rootdir}} prefix={{prefix}} cosmic-applibrary/install
     {{ just }} rootdir={{rootdir}} prefix={{prefix}} cosmic-bg/install
@@ -51,7 +55,7 @@ install rootdir="" prefix="/usr/local": build
 _mkdir dir:
    mkdir -p dir
 
-sysext dir=(invocation_directory() / "cosmic-sysext") version=("nightly-" + `git rev-parse --short HEAD`): (_mkdir dir) (install dir "/usr")
+sysext dir=(invocation_directory() / "cosmic-sysext") version=("nightly-" + `git rev-parse --short HEAD`): (_mkdir dir) (install "rootdir="dir "prefix=/usr")
     #!/usr/bin/env sh
     mkdir -p {{dir}}/usr/lib/extension-release.d/
     cat >{{dir}}/usr/lib/extension-release.d/extension-release.cosmic-sysext <<EOF
