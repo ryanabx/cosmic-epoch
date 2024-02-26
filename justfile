@@ -55,17 +55,6 @@ install:
 _mkdir dir:
    mkdir -p dir
 
-sysext dir=(invocation_directory() / "cosmic-sysext") version=("nightly-" + `git rev-parse --short HEAD`): (_mkdir dir) (install)
-    #!/usr/bin/env sh
-    mkdir -p {{dir}}/usr/lib/extension-release.d/
-    cat >{{dir}}/usr/lib/extension-release.d/extension-release.cosmic-sysext <<EOF
-    NAME="Cosmic DE"
-    VERSION={{version}}
-    $(cat /etc/os-release | grep '^ID=')
-    $(cat /etc/os-release | grep '^VERSION_ID=')
-    EOF
-    echo "Done"
-
 clean:
     rm -rf cosmic-sysext
     rm -rf cosmic-applets/target
